@@ -71,12 +71,12 @@
   },
   "funding": [
     {
-      "type": "github",
-      "url": "https://github.com/sponsors/FajarKim"
+      "type": "ko-fi",
+      "url": "https://ko-fi.com/jstility"
     },
     {
-      "type": "kofi",
-      "url": "https://ko-fi.com/jstility"
+      "type": "github",
+      "url": "https://github.com/sponsors/FajarKim"
     }
   ],
   "engines": {
