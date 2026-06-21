@@ -7,6 +7,23 @@
     "name": "JStility",
     "url": "https://github.com/jstility"
   },
+  "keywords": [
+    "typescript",
+    "build",
+    "compiler",
+    "dual-format",
+    "cjs",
+    "esm",
+    "commonjs",
+    "es modules",
+    "auto-exports",
+    "package.json",
+    "watch",
+    "plugin",
+    "tsc",
+    "build tool",
+    "jstility"
+  ],
   "type": "module",
   "exports": {
     ".": {
