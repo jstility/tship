@@ -1,0 +1,68 @@
+{
+  "name": "@jstility/tship",
+  "version": "1.0.0",
+  "description": "Smart TypeScript build tool for dual-format CJS and ESM output with auto exports and a robust watch mode.",
+  "license": "Apache-2.0",
+  "author": {
+    "name": "JStility",
+    "url": "https://github.com/jstility"
+  },
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "bin": {
+    "tship": "./dist/cli/index.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "test": "vitest",
+    "lint": "eslint src --ext .ts"
+  },
+  "peerDependencies": {
+    "typescript": ">=4.9.0"
+  },
+  "dependencies": {
+    "chokidar": "^5.0.0",
+    "commander": "^15.0.0",
+    "picocolors": "^1.1.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.9.0",
+    "@typescript-eslint/eslint-plugin": "^8.57.0",
+    "@typescript-eslint/parser": "^8.57.0",
+    "eslint": "^8.57.0",
+    "typescript": "~5.5.0",
+    "vitest": "^4.1.9"
+  },
+  "homepage": "https://jstility.github.io/tship",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jstility/tship.git"
+  },
+  "bugs": {
+    "url": "https://github.com/jstility/tship/issues"
+  },
+  "funding": [
+    {
+      "type": "github",
+      "url": "https://github.com/sponsors/FajarKim"
+    },
+    {
+      "type": "kofi",
+      "url": "https://ko-fi.com/jstility"
+    }
+  ],
+  "engines": {
+    "node": ">=18"
+  }
+}

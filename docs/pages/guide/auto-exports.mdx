@@ -1,0 +1,50 @@
+# Auto Exports
+
+`tship` can automatically maintain the `exports`, `typesVersions`, and classic fields (`main`, `module`, `types`) in your `package.json`.
+
+## Enabling
+
+```json
+{
+  "tship": {
+    "autoExports": {
+      "generate": true,
+      "typesVersions": true
+    }
+  }
+}
+```
+
+## Generated Output
+
+```json
+{
+  "main": "./dist/cjs/index.js",
+  "module": "./dist/esm/index.js",
+  "types": "./dist/esm/index.d.ts",
+  "exports": {
+    ".": {
+      "require": "./dist/cjs/index.js",
+      "import": "./dist/esm/index.js",
+      "types": {
+        "require": "./dist/cjs/index.d.ts",
+        "import": "./dist/esm/index.d.ts"
+      }
+    }
+  },
+  "typesVersions": {
+    "*": {
+      "d.cts": ["./dist/cjs/index.d.ts"],
+      "d.mts": ["./dist/esm/index.d.ts"]
+    }
+  }
+}
+```
+
+- **`main`** points to the CJS entry for older Node.js and bundlers that only read this field.
+- **`module`** points to the ESM entry for modern bundlers (Webpack, Rollup, Vite).
+- **`types`** points to the ESM declaration for TypeScript resolution.
+- **`exports`** provides conditional entries for both `require` and `import` consumers.
+- **`typesVersions`** ensures backward compatibility with TypeScript versions below 4.5.
+
+If `declaration` is disabled in your `tsconfig.json`, the `types` field and type entries are skipped automatically.

@@ -1,0 +1,84 @@
+# Installation
+
+## Prerequisites
+
+- Node.js >= 18
+- TypeScript >= 4.9 (peer dependency)
+
+## Install
+
+```bash
+npm install -D @jstility/tship typescript
+```
+
+## Usage without configuration
+
+If your `tsconfig.json` does not contain a `tship` property, `tship` acts exactly like `tsc`.  
+It compiles your project once, using the compiler options you already defined.
+
+```bash
+npx tship build   # same as `tsc`
+```
+
+## Adding `tship` features
+
+To enable dual-format builds, auto-exports, or plugins, add a `tship` section to your `tsconfig.json`
+or create a `tship.config.ts` file.
+
+### Option 1: Inside `tsconfig.json`
+
+```json
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "strict": true,
+    "declaration": true,
+    "sourceMap": true
+  },
+  "tship": {
+    "formats": ["cjs", "esm"]
+  },
+  "include": ["src/**/*.ts"]
+}
+```
+
+When `outDir` is set in `tsconfig.json` but no output directories are given inside `tship`,
+both formats are emitted **directly into that folder** and file extensions are automatically
+renamed (`.cjs` / `.mjs`) to avoid collisions.
+
+### Option 2: Separate config file
+
+Run the init command to create a `tship.config.ts`:
+
+```bash
+npx tship init
+```
+
+Then customize it:
+
+```ts
+import { defineConfig } from '@jstility/tship';
+
+export default defineConfig({
+  formats: ['cjs', 'esm'],
+});
+```
+
+## Add scripts
+
+```json
+{
+  "scripts": {
+    "build": "tship build",
+    "watch": "tship watch"
+  }
+}
+```
+
+```bash
+npm run build
+```

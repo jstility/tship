@@ -1,0 +1,14 @@
+# Watch Mode
+
+`tship watch` starts a file watcher that rebuilds on every change.
+
+```bash
+npx tship watch
+```
+
+## How It Works
+
+- Uses **`chokidar`** for cross-platform file watching.
+- Watches your source directory and configuration files.
+- Rebuilds only the affected formats efficiently.
+- Displays clear status messages with colored output.

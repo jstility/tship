@@ -1,0 +1,22 @@
+# Monorepo Integration
+
+`tship` works well with monorepos and project references.
+
+## Recommendations
+
+- Use a root `tsconfig.json` with project references.
+- Configure `tship` individually in each package.
+- Run builds in parallel using your workspace manager (e.g., Turborepo, Lerna).
+
+## Example Structure
+
+```
+packages/
+├── lib-a/
+│   ├── tsconfig.json
+│   └── tship.config.ts
+├── lib-b/
+│   ├── tsconfig.json
+│   └── tship.config.ts
+└── ...
+```

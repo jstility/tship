@@ -1,0 +1,9 @@
+{
+  "index": "Overview",
+  "configuration": "Configuration",
+  "dual-format": "Dual-format Output",
+  "declarations": "Declaration Files",
+  "auto-exports": "Auto Exports",
+  "watch-mode": "Watch Mode",
+  "monorepo": "Monorepo Integration"
+}

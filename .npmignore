@@ -1,0 +1,42 @@
+# Source code
+src/
+
+# Test files
+test/
+tests/
+vitest.config.ts
+coverage/
+
+# Documentation website
+docs/
+next.config.ts
+nextra.d.ts
+theme.config.tsx
+styles/
+
+# Development config
+.editorconfig
+.eslintrc*
+.prettierrc*
+.gitattributes
+.gitignore
+
+# CI/CD
+.github/
+
+# TypeScript config
+tsconfig.json
+*.tsbuildinfo
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Lock files
+package-lock.json
+yarn.lock
+pnpm-lock.yaml

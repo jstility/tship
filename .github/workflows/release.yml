@@ -1,0 +1,153 @@
+name: Create Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  release:
+    name: Generate and publish GitHub Release
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: read
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Generate Release Notes
+        id: changelog
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          TAG_NAME=${GITHUB_REF#refs/tags/}
+          PREV_TAG=$(git tag --sort=-creatordate | grep -B1 "^$TAG_NAME$" | head -1 | grep -v "^$TAG_NAME$" || true)
+
+          if [ -z "$PREV_TAG" ]; then
+            RANGE="$TAG_NAME"
+            FIRST_RELEASE=true
+          else
+            RANGE="${PREV_TAG}..${TAG_NAME}"
+            FIRST_RELEASE=false
+          fi
+
+          git log --format='%h %s' --no-merges $RANGE > /tmp/commits.txt
+
+          FEATS=""
+          FIXES=""
+          DOCS=""
+          CHORES=""
+
+          CONVENTIONAL_REGEX='^[a-z]+(\([^)]*\))?!?:\s'
+
+          while IFS= read -r line; do
+            hash=$(echo "$line" | awk '{print $1}')
+            subject=$(echo "$line" | cut -d' ' -f2-)
+
+            pr=$(echo "$subject" | grep -oE '\(#[0-9]+\)$' || true)
+            if [ -n "$pr" ]; then
+              pr_num=$(echo "$pr" | tr -d '()#')
+            else
+              pr_num=""
+            fi
+
+            if [ -n "$pr_num" ]; then
+              pr_title=$(gh pr view "$pr_num" --json title --jq '.title' 2>/dev/null || echo "")
+              if [ -n "$pr_title" ]; then
+                raw_description="$pr_title"
+              else
+                raw_description="$subject"
+              fi
+              ref="in #${pr_num}"
+            else
+              raw_description="$subject"
+              ref="in ${hash}"
+            fi
+
+            if echo "$raw_description" | grep -qP "$CONVENTIONAL_REGEX"; then
+              type=$(echo "$raw_description" | sed -E 's/^([a-z]+)(\([^)]*\))?!?:\s.*/\1/')
+              is_breaking=false
+              if echo "$raw_description" | grep -qP '^[a-z]+(\([^)]*\))?!:\s'; then
+                is_breaking=true
+              fi
+              description=$(echo "$raw_description" | sed -E 's/^[a-z]+(\([^)]*\))?!?:\s*//')
+              description=$(echo "$description" | sed -E 's/\s*\(#[0-9]+\)$//')
+              description=$(echo "$description" | sed -E 's/^[[:space:]]*//;s/[[:space:]]*$//')
+              if [ -n "$description" ]; then
+                description="$(tr '[:lower:]' '[:upper:]' <<< ${description:0:1})${description:1}"
+              fi
+
+              if [ -n "$pr_num" ]; then
+                author_json=$(gh pr view "$pr_num" --json author --jq '.author' 2>/dev/null || echo "")
+                contributor_login=$(echo "$author_json" | jq -r '.login // empty')
+                is_bot=$(echo "$author_json" | jq -r '.is_bot // false')
+              else
+                author_json=$(gh api repos/$GITHUB_REPOSITORY/commits/$hash --jq '.author' 2>/dev/null || echo "")
+                contributor_login=$(echo "$author_json" | jq -r '.login // empty')
+                is_bot=$(echo "$author_json" | jq -r '.type == "Bot"' 2>/dev/null)
+              fi
+
+              if [ -z "$contributor_login" ]; then
+                contributor_display="unknown"
+              elif [ "$is_bot" = "true" ]; then
+                short_name=$(echo "$contributor_login" | sed -E 's/^.*\///')
+                if ! echo "$short_name" | grep -qi '\[bot\]$'; then
+                  short_name="${short_name}[bot]"
+                fi
+                contributor_display="🤖 $short_name"
+              else
+                contributor_display="@${contributor_login}"
+              fi
+
+              bullet="- ${description} by ${contributor_display} ${ref}."
+              if [ "$is_breaking" = true ]; then
+                bullet="- ⚠️ **BREAKING:** ${description} by ${contributor_display} ${ref}."
+              fi
+
+              case "$type" in
+                feat) FEATS+="$bullet"$'\n' ;;
+                fix) FIXES+="$bullet"$'\n' ;;
+                docs) DOCS+="$bullet"$'\n' ;;
+                *) CHORES+="$bullet"$'\n' ;;
+              esac
+            fi
+          done < /tmp/commits.txt
+
+          > /tmp/release_notes.md
+          [ -n "$FEATS" ] && printf "## Features\n%s\n" "$FEATS" >> /tmp/release_notes.md
+          [ -n "$FIXES" ] && printf "## Bug Fixes\n%s\n" "$FIXES" >> /tmp/release_notes.md
+          [ -n "$DOCS" ] && printf "## Documentation\n%s\n" "$DOCS" >> /tmp/release_notes.md
+          [ -n "$CHORES" ] && printf "## Chores & Maintenance\n%s\n" "$CHORES" >> /tmp/release_notes.md
+
+          REPO_URL="https://github.com/$GITHUB_REPOSITORY"
+          if [ "$FIRST_RELEASE" = false ]; then
+            COMPARE_URL="${REPO_URL}/compare/${PREV_TAG}...${TAG_NAME}"
+          else
+            COMPARE_URL="${REPO_URL}/commits/${TAG_NAME}"
+          fi
+
+          cat >> /tmp/release_notes.md <<EOF
+
+          We appreciate your continued support and contributions to the project. Stay tuned for more exciting updates in the future!
+
+          **Full Changelog:** [\`${PREV_TAG:-initial}...${TAG_NAME}\`](${COMPARE_URL})
+          EOF
+
+          NOTES=$(cat /tmp/release_notes.md)
+          EOF=$(dd if=/dev/urandom bs=15 count=1 status=none | base64)
+          echo "release_notes<<$EOF" >> $GITHUB_OUTPUT
+          echo "$NOTES" >> $GITHUB_OUTPUT
+          echo "$EOF" >> $GITHUB_OUTPUT
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v3
+        with:
+          name: ${{ github.ref_name }}
+          body: ${{ steps.changelog.outputs.release_notes }}
+          draft: false
+          prerelease: ${{ contains(github.ref_name, 'alpha') || contains(github.ref_name, 'beta') }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

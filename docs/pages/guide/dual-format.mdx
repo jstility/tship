@@ -1,0 +1,27 @@
+# Dual-format Output
+
+Once `tship` is activated, it compiles your TypeScript source into two formats simultaneously.
+
+## How It Works
+
+For each format, a separate TypeScript program is created with the appropriate `module` setting:
+
+- **CJS**: `module: CommonJS`
+- **ESM**: `module: ESNext` (always produces `import`/`export`)
+
+The output directories are determined by the [configuration rules](#) described in the Configuration guide.
+
+## Folder Sharing and Extensions
+
+If both formats share the **same** output directory (e.g., you set `compilerOptions.outDir` without `tship.outDirs`),
+`tship` will rename files to use distinct extensions:
+
+- CJS → `.cjs` and `.d.cts`
+- ESM → `.mjs` and `.d.mts`
+
+If directories are separate, files keep the standard `.js` and `.d.ts` extensions.
+
+## When `tship` is not active
+
+If no `tship` configuration is present, `tship` compiles a single output exactly like `tsc`.
+No renaming or dual-format logic is applied.

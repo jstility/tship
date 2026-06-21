@@ -1,0 +1,27 @@
+# Declaration Files
+
+`tship` generates declaration files (`*.d.ts`) for each format **only when `declaration` is enabled in your `tsconfig.json`**.
+
+## Structure
+
+When directories are separate:
+- `dist/cjs/index.d.ts`
+- `dist/esm/index.d.ts`
+
+When sharing a folder:
+- `dist/index.d.cts`
+- `dist/index.d.mts`
+
+## Respecting `tsconfig.json` Options
+
+`tship` fully respects your `tsconfig.json` settings:
+
+- If `declaration` is `false` or not set → no `.d.ts` files are emitted.
+- If `declarationMap` is `false` or not set → no `.d.ts.map` files are emitted.
+- If `sourceMap` is `false` or not set → no `.js.map` files are emitted.
+
+This ensures `tship` only produces what you explicitly asked for.
+
+## Source Maps
+
+When enabled, source maps and declaration maps are generated and correctly reference the output files. If files are renamed (when formats share a directory), the source map references are updated automatically.

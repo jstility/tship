@@ -1,0 +1,21 @@
+# Migration
+
+Migrate from other build tools to `tship`.
+
+## From `tsc`
+
+Replace `tsc` with `tship build`. Your existing `tsconfig.json` is fully supported.
+
+```bash
+# Before
+tsc
+
+# After
+tship build
+```
+
+Add the `tship` property to enable dual-format output.
+
+## From `tsup`
+
+`tship` provides similar dual-format building but uses the TypeScript compiler API directly, ensuring declaration files are always perfectly consistent with your source code.

@@ -1,0 +1,39 @@
+# CLI Commands
+
+## `tship build`
+
+Compiles the project.
+
+| Option | Description |
+|--------|-------------|
+| `-p, --project <path>` | Path to `tsconfig.json` |
+| `--formats <cjs,esm>` | Comma-separated formats (only when `tship` is active) |
+| `--cjs-out <dir>` | Output directory for CJS |
+| `--esm-out <dir>` | Output directory for ESM |
+| `--clean` | Clean output before build |
+
+If no `tship` configuration is present, `tship build` behaves exactly like `tsc`.
+
+## `tship watch`
+
+Builds and watches for changes. Falls back to `tsc --watch` when `tship` is not configured.
+
+| Option | Description |
+|--------|-------------|
+| `-p, --project <path>` | Path to `tsconfig.json` |
+
+## `tship init`
+
+Initializes `tship` configuration.
+
+| Option | Description |
+|--------|-------------|
+| `--tsconfig` | Add `tship` to `tsconfig.json` instead of creating a separate file |
+
+## `tship info`
+
+Prints resolved configuration and diagnostics.
+
+| Option | Description |
+|--------|-------------|
+| `-p, --project <path>` | Path to `tsconfig.json` |

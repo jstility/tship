@@ -1,0 +1,60 @@
+# @jstility/tship
+
+<div style={{ display: 'flex', justifyContent: 'center', gap: '8px', flexWrap: 'wrap', marginTop: '1.5rem', marginBottom: '2rem' }}>
+  <a href="https://www.npmjs.com/package/@jstility/tship" target="_blank" rel="noopener noreferrer">
+    <img src="https://img.shields.io/npm/v/@jstility/tship.svg" alt="npm version" />
+  </a>
+  <a href="https://github.com/jstility/tship/blob/master/LICENSE">
+    <img src="https://img.shields.io/npm/l/@jstility/tship.svg" alt="License" />
+  </a>
+  <a href="https://nodejs.org" target="_blank" rel="noopener noreferrer">
+    <img src="https://img.shields.io/node/v/@jstility/tship.svg" alt="Node Version" />
+  </a>
+  <a href="https://jstility.github.io/tship" target="_blank" rel="noopener noreferrer">
+    <img src="https://img.shields.io/badge/docs-GitHub%20Pages-blue" alt="Documentation" />
+  </a>
+  <a href="https://jstility.github.io/donate" target="_blank" rel="noopener noreferrer">
+    <img src="https://img.shields.io/badge/donate-support%20us-yellowgreen" alt="Donate" />
+  </a>
+</div>
+
+<p align="center">
+  <a href="https://jstility.github.io/tship">
+    <img src="https://jstility.github.io/tship/banner.svg" alt="Banner Logo" width="100%" />
+  </a>
+</p>
+
+✨ **A smarter build tool that starts like `tsc` and grows with you. Enable dual-format output, automatic `package.json` exports, and a robust watch mode with just a few lines of configuration.** ✨
+
+## Features
+
+TShip is built on top of the TypeScript compiler API and delivers:
+
+- **Dual-format output** – produce CommonJS and ES modules from a single codebase (opt-in)
+- **Smart extension handling** – automatically renames files when output directories collide, keeps standard extensions otherwise
+- **Auto-exports** – updates `package.json` with conditional `exports`, `main`, `module`, `types`, and `typesVersions` for maximum ecosystem compatibility
+- **Robust watch mode** – uses chokidar for reliable file watching (falls back to `tsc --watch` when not configured)
+- **Plugin system** – hook into `onPostEmit` and `onBuildEnd` to extend the build pipeline
+- **Zero config** – runs as standard `tsc` by default; advanced features are activated only when you add `tship` settings
+- **Fast** – compiles each format in parallel using the TypeScript API
+
+All features are configurable via `tsconfig.json`, a dedicated `tship.config.ts`, or CLI flags.
+
+## Quick Start
+
+```bash
+npm install -D @jstility/tship typescript
+npx tship init
+npx tship build
+```
+
+## Authors and Acknowledgment
+
+`@jstility/tship` was created by **Rangga Fajar Oktariansyah ([@FajarKim](https://github.com/FajarKim))** and is maintained by the **JStility ([@jstility](https://github.com/jstility))** organization.
+It builds upon the excellent [TypeScript compiler API](https://github.com/microsoft/TypeScript) and is inspired by tools like `tsup` and `tsc`.
+
+## License
+
+This project is licensed under the [Apache License 2.0](https://github.com/jstility/tship/blob/master/LICENSE).
+
+[Learn more in the installation guide →](/installation)

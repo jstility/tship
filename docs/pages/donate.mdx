@@ -1,0 +1,19 @@
+---
+title: Donate
+---
+
+import { useEffect } from 'react';
+
+export default function DonateRedirect() {
+  if (typeof window !== 'undefined') {
+    window.location.href = 'https://jstility.github.io/donate';
+  }
+  return (
+    <div style={{ textAlign: 'center', padding: '4rem 0' }}>
+      <p>Redirecting to JStility donation page...</p>
+      <a href="https://jstility.github.io/donate">Click here if you are not redirected.</a>
+    </div>
+  );
+}
+
+<DonateRedirect />

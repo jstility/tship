@@ -1,0 +1,54 @@
+# Plugin API
+
+Plugins can hook into the build lifecycle to customize behavior.
+
+## `TshipPlugin` Interface
+
+```ts
+interface TshipPlugin {
+  name: string;
+  onPostEmit?: (ctx: PostEmitContext) => void | Promise<void>;
+  onBuildEnd?: (ctx: BuildEndContext) => void | Promise<void>;
+}
+```
+
+## Hooks
+
+### `onPostEmit`
+
+Called after a single format has been emitted.
+
+#### Context
+
+- `format` – The format just built (`"cjs"` | `"esm"`)
+- `outDir` – Absolute output directory
+- `files` – List of all emitted files
+- `rootDir` – Source root directory
+
+### `onBuildEnd`
+
+Called after all formats have been built.
+
+#### Context
+
+- `formats` – All built formats
+- `outputs` – Map of format to output directory
+- `duration` – Total build time in ms
+
+## Example Plugin
+
+```ts
+import type { TshipPlugin } from '@jstility/tship';
+
+export function bannerPlugin(text: string): TshipPlugin {
+  return {
+    name: 'banner',
+    async onPostEmit(ctx) {
+      for (const file of ctx.files) {
+        const content = await fs.readFile(file, 'utf-8');
+        await fs.writeFile(file, `/* ${text} */\n${content}`);
+      }
+    }
+  };
+}
+```

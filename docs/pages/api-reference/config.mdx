@@ -1,0 +1,30 @@
+# Configuration Options
+
+## `TshipConfig`
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `formats` | `("cjs" \| "esm")[]` | Output formats (only when `tship` is active; default: `["esm"]`) |
+| `outDirs` | `{ cjs?: string; esm?: string }` | Custom output directories per format |
+| `outDir` | `string` | Single directory for all formats (overrides `outDirs`) |
+| `autoExports` | `boolean \| AutoExportsOptions` | Auto-generate `package.json` exports |
+| `plugins` | `TshipPlugin[]` | Build pipeline plugins |
+| `project` | `string` | Path to `tsconfig.json` |
+| `cjsModule` | `string` | Override `module` for CJS builds (must be `"CommonJS"`) |
+| `cjsModuleResolution` | `string` | Override `moduleResolution` for CJS builds (must be `"Node10"`) |
+| `esmModule` | `string` | Override `module` for ESM builds (e.g. `"ESNext"`, `"NodeNext"`) |
+| `esmModuleResolution` | `string` | Override `moduleResolution` for ESM builds (e.g. `"NodeNext"`) |
+
+## `AutoExportsOptions`
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `generate` | `boolean` | Generate conditional exports for each format |
+| `typesVersions` | `boolean` | Add `typesVersions` for older TypeScript |
+
+## Output directory priority
+
+1. `tship.outDir` (single directory for all formats)
+2. `tship.outDirs` (per-format, merged with defaults)
+3. `compilerOptions.outDir` from tsconfig (shared by all formats)
+4. `dist/cjs` and `dist/esm` (built-in default)

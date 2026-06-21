@@ -1,0 +1,54 @@
+# Configuration
+
+`tship` can be configured via:
+
+1. **`tship` property in `tsconfig.json`** (simple projects)
+2. **`tship.config.ts`** file (advanced with plugins)
+3. **CLI options** (overrides for specific builds)
+
+## Activation
+
+`tship` runs in **plain `tsc` mode** until you add at least one meaningful option:
+`formats`, `outDirs`, `outDir`, `autoExports`, `plugins`, `cjsModule`, `cjsModuleResolution`, `esmModule`, or `esmModuleResolution`.  
+An empty `"tship": {}` is treated the same as no configuration.
+
+## Priority
+
+```
+CLI options > tship.config.ts > tsconfig.json > tsconfig compilerOptions
+```
+
+## Options
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `formats` | `("cjs"\|"esm")[]` | `["esm"]` (only when tship is active) | Output formats |
+| `outDirs` | `{ cjs?: string; esm?: string }` | follows `compilerOptions.outDir` | Custom output directories per format |
+| `outDir` | `string` | – | Single directory for all formats (overrides `outDirs`) |
+| `autoExports` | `boolean \| AutoExportsOptions` | `false` | Auto-update `package.json` exports |
+| `plugins` | `TshipPlugin[]` | `[]` | Build pipeline plugins |
+| `project` | `string` | auto-detected | Path to `tsconfig.json` |
+| `cjsModule` | `string` | `"CommonJS"` | Override `module` for CJS builds (must be `"CommonJS"`) |
+| `cjsModuleResolution` | `string` | `"Node10"` | Override `moduleResolution` for CJS builds (must be `"Node10"`) |
+| `esmModule` | `string` | `"ESNext"` | Override `module` for ESM builds |
+| `esmModuleResolution` | `string` | `"NodeNext"` | Override `moduleResolution` for ESM builds |
+
+## Output directory resolution
+
+1. If `tship.outDir` is given → all formats go there.
+2. Else if `tship.outDirs` has entries → they are used (with defaults for missing keys).
+3. Else if `compilerOptions.outDir` is set in tsconfig → both formats share that directory.
+4. Else → `dist/cjs` and `dist/esm` are created.
+
+When multiple formats share the same directory, `tship` renames files (`.cjs`/`.mjs`) to avoid conflicts.
+
+## Example: Use `tsconfig.json` `outDir` directly
+
+```json
+{
+  "compilerOptions": { "outDir": "./build" },
+  "tship": { "formats": ["cjs", "esm"] }
+}
+```
+
+Output: `./build/index.cjs`, `./build/index.mjs`, etc.
