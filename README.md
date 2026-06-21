@@ -161,7 +161,7 @@ If you encounter any issues or have questions, please [open an issue](https://gi
 
 ## Contributing
 
-Contributions are very welcome! Whether it's a bug report, feature request, or a pull request, please follow the guidelines in [here](https://jstility.github.io/contributing). All contributions are appreciated.
+Contributions are very welcome! Whether it's a bug report, feature request, or a pull request, please follow the guidelines in [here](https://jstility.github.io/tship/contributing). All contributions are appreciated.
 
 ## Authors and Acknowledgment
 
