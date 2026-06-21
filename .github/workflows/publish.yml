@@ -53,6 +53,6 @@ jobs:
 
       - name: Publish to npm
         run: |
-          npm publish --tag "${{ steps.tag_info.outputs.dist_tag }}"
+          npm publish --tag "${{ steps.tag_info.outputs.dist_tag }}" --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
